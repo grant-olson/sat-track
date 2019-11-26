@@ -13,6 +13,10 @@ directory.add_keplerian("NOAA 15",
                         "1 25338U 98030A   19329.89389862 +.00000035 +00000-0 +33163-4 0  9996",
                         "2 25338 098.7361 350.7909 0011200 133.9459 226.2647 14.25940760119826")
 
+directory.add_keplerian("NOAA 19",
+                        "1 33591U 09005A   19329.93340236 +.00000035 +00000-0 +44439-4 0  9995",
+                        "2 33591 099.1905 325.0193 0013113 291.0057 068.9711 14.12384801556260")
+
 robot = AntennaRobot(17,18, elevation_max=2350)
 
 def decimal_angle(degrees,minutes,seconds):
@@ -36,7 +40,7 @@ def track_it(robot, satellite, home):
         decimal_el = decimal_angle(el_d, el_m, el_s)
     
         if decimal_el < 0:
-            print("BELOW HORIZON %d" % decimal_el)
+            print("BELOW HORIZON %f %f" % (decimal_az, decimal_el))
             robot.update(decimal_az, 0.0)
             if started_pass:
                 print("FINISHED TRACKING")
@@ -55,4 +59,4 @@ def track_it(robot, satellite, home):
         
 
 if __name__ == "__main__":
-    track_it(robot, "NOAA 15", home)
+    track_it(robot, "NOAA 18", home)
