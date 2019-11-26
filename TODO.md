@@ -1,0 +1,1 @@
+* Proper fix for inverted servo direction on Azimuth. I don't think current fix will break 1/2 of other users setups.

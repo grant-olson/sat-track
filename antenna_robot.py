@@ -12,7 +12,7 @@ class AntennaRobot:
         sleep(0.5)
 
     def update(self, azimuth, elevation):
-        azimuth = float(azimuth)
+        azimuth = 360 - float(azimuth)
         elevation = float(elevation)
 
         if azimuth < 0.0 or azimuth > 360.0:
