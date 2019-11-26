@@ -9,6 +9,10 @@ directory.add_keplerian("NOAA 18",
                     "1 28654U 05018A   19329.58873065  .00000093  00000-0  75226-4 0  9993",
                     "2 28654  99.0757  18.7938 0015197  88.8661 271.4251 14.12469460748097")
 
+directory.add_keplerian("NOAA 15",
+                        "1 25338U 98030A   19329.89389862 +.00000035 +00000-0 +33163-4 0  9996",
+                        "2 25338 098.7361 350.7909 0011200 133.9459 226.2647 14.25940760119826")
+
 robot = AntennaRobot(17,18, elevation_max=2350)
 
 def decimal_angle(degrees,minutes,seconds):
@@ -17,6 +21,9 @@ def decimal_angle(degrees,minutes,seconds):
 def track_it(robot, satellite, home):
     started_pass = False
 
+    last_az = 0
+    last_el = 0
+    
     while True:
         el, az, distance = directory.get_current_azimuth_and_elevation(satellite, home)
         az_d, az_m, az_s = az.dms()
@@ -39,10 +46,13 @@ def track_it(robot, satellite, home):
 
         else:
             robot.update(decimal_az, decimal_el)
-            print("TRACKING %d %d" % (decimal_az, decimal_el))
+            if (last_az != az_d) or (last_el != el_d):
+                print("TRACKING %0.2f %0.2f" % (decimal_az, decimal_el))
+                last_az = az_d
+                last_el = el_d
             sleep(0.05)
             started_pass = True
         
 
 if __name__ == "__main__":
-    track_it(robot, "NOAA 18", home)
+    track_it(robot, "NOAA 15", home)
