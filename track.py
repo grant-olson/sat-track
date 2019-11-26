@@ -23,6 +23,20 @@ def decimal_angle(degrees,minutes,seconds):
     return float(degrees) + (float(minutes) / 60) + (float(seconds) / 3600)
 
 def track_it(robot, satellite, home):
+
+    next_pass = directory.get_next_pass(satellite, home)
+    if not next_pass['success']:
+        print("No passes in next 24 hours. Won't Track.")
+        return
+
+    print("Next Pass starts at %s." % next_pass['start'])
+    if 'finish' in next_pass:
+        pass_time = next_pass['finish'] - next_pass['start']
+        pass_minutes = pass_time.seconds / 60
+        pass_seconds = pass_time.seconds % 60
+        print("Pass length %d m %d s" % (pass_minutes, pass_seconds))
+
+    print("===")
     started_pass = False
 
     last_az = 0
