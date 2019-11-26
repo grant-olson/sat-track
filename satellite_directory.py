@@ -1,6 +1,7 @@
 import maidenhead
 from skyfield.api import load, Topos, EarthSatellite, Timescale, utc
 from datetime import datetime, timedelta
+
 ts = load.timescale()
 
 class Home:
@@ -28,7 +29,35 @@ class SatelliteDirectory:
 
     def get_current_azimuth_and_elevation(self, name, home):
         return self.get_azimuth_and_elevation(name, home, ts.now())
-    
+
+    def get_next_pass(self, name, home):
+        """
+        Get next pass with a limit of 24 hours
+        """
+        now = datetime.now(utc)
+        found_pass = False
+
+        results = {}
+        
+        for i in range(0,60*24):
+            next_time = now + timedelta(0,60*i) # add appropriate number of seconds
+            next_timescale = ts.utc(next_time)
+            az, el, distance = self.get_azimuth_and_elevation(name, home, next_timescale)
+
+            d, m, s = az.dms()
+            
+            if found_pass:
+                if d < 0:
+                    results["finish"] = next_time
+                    break
+            else:
+                if d >= 0:
+                    results["start"] = next_time
+                    found_pass = True
+
+        results["success"] = found_pass
+        return results
+                    
 if __name__ == "__main__":
     
     home = Home("EN90xj")
@@ -45,10 +74,6 @@ if __name__ == "__main__":
     print(az_el)
 
 
-    # print("NEXT HOUR")
-    # now = datetime.utcnow()
-    # for i in range(0,60):
-    #     next_time = now + timedelta(0,60*i)
-    #     next_timescale = Timescale.utc(next_time)
-    #     az_el = directory.get_azimuth_and_elevation("NOAA 18", home, next_timescale)
-    #     print("%i %s" % (i, az_el))
+    print("NEXT PASS")
+    next_pass = directory.get_next_pass("NOAA 18", home)
+    print("Start: %s Finish: %s" % (next_pass['start'], next_pass['finish']))
