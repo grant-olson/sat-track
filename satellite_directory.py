@@ -42,9 +42,9 @@ class SatelliteDirectory:
         for i in range(0,60*24):
             next_time = now + timedelta(0,60*i) # add appropriate number of seconds
             next_timescale = ts.utc(next_time)
-            az, el, distance = self.get_azimuth_and_elevation(name, home, next_timescale)
+            el, az, distance = self.get_azimuth_and_elevation(name, home, next_timescale)
 
-            d, m, s = az.dms()
+            d, m, s = el.dms()
             
             if found_pass:
                 if d < 0:
@@ -76,4 +76,8 @@ if __name__ == "__main__":
 
     print("NEXT PASS")
     next_pass = directory.get_next_pass("NOAA 18", home)
-    print("Start: %s Finish: %s" % (next_pass['start'], next_pass['finish']))
+    if next_pass['success']:
+        if 'finish' in next_pass:
+            print("Start: %s Finish: %s" % (next_pass['start'], next_pass['finish']))
+        else:
+            print("Start: %s Finish: AFTER 24 HOURS" % next_pass['start'])

@@ -17,15 +17,15 @@ def track_it(satellite, home):
     started_pass = False
 
     while True:
-        az, el, distance = directory.get_current_azimuth_and_elevation(satellite, home)
+        el, az, distance = directory.get_current_azimuth_and_elevation(satellite, home)
         az_d, az_m, az_s = az.dms()
         decimal_az = decimal_angle(az_d, az_m, az_s)
 
         el_d, el_m, el_s = el.dms()
         decimal_el = decimal_angle(el_d, el_m, el_s)
     
-        if decimal_az < 0:
-            print("BELOW HORIZON %d" % decimal_az)
+        if decimal_el < 0:
+            print("BELOW HORIZON %d" % decimal_el)
             if started_pass:
                 print("FINISHED TRACKING")
                 return
