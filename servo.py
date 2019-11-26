@@ -55,7 +55,7 @@ def rotation_test(minutes):
         servo2.set_angle(angle)
         sleep(sleep_time)
         
-   print("Rotation test... %d minute reverse" % minutes)
+    print("Rotation test... %d minute reverse" % minutes)
     for i in range(substeps+1):
         angle = 180.0 - (180.0 * i / substeps)
 #        print(angle)
@@ -69,8 +69,8 @@ def rotation_test(minutes):
 if __name__ == "__main__":
     try:
         calibration_check()
-        for i in range(1,6):
-            rotation_test(i)
+#        for i in range(1,6):
+#            rotation_test(i)
     except:
 #        GPIO.cleanup()
         raise
