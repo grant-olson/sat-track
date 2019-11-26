@@ -1,0 +1,4 @@
+pigpio
+skyfield
+maidenhead
+numpy
