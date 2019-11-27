@@ -1,6 +1,7 @@
 import maidenhead
 from skyfield.api import load, Topos, EarthSatellite, Timescale, utc
 from datetime import datetime, timedelta
+import sys
 
 ts = load.timescale()
 
@@ -18,6 +19,10 @@ class SatelliteDirectory:
         s = EarthSatellite(k1,k2,name=name)
         self.satellites[name] = s
 
+    def add_tle_url(self, url):
+        sats = load.tle(url)
+        self.satellites.update(sats)
+        
     def get_diff(self, name, home):
         s = self.satellites[name]
         diff = s - home.topo
@@ -57,35 +62,47 @@ class SatelliteDirectory:
 
         results["success"] = found_pass
         return results
-                    
+
+
+def todays_directory():
+    directory = SatelliteDirectory()
+
+    urls = {"Amateur": "https://celestrak.com/NORAD/elements/amateur.txt",
+            "NOAA Weather": "https://celestrak.com/NORAD/elements/noaa.txt"}
+
+    for name, url in urls.items():
+        print("Loading %s..." % name)
+        directory.add_tle_url(url)
+
+    return directory
+
 if __name__ == "__main__":
     
     home = Home("EN90xj")
 
-    directory = SatelliteDirectory()
-    directory.add_keplerian("NOAA 18",
-                        "1 28654U 05018A   19329.58873065  .00000093  00000-0  75226-4 0  9993",
-                        "2 28654  99.0757  18.7938 0015197  88.8661 271.4251 14.12469460748097")
+    directory = todays_directory()
 
-    directory.add_keplerian("NOAA 15",
-                        "1 25338U 98030A   19329.89389862 +.00000035 +00000-0 +33163-4 0  9996",
-                        "2 25338 098.7361 350.7909 0011200 133.9459 226.2647 14.25940760119826")
+    print(repr(directory.satellites.keys()))
 
-    directory.add_keplerian("NOAA 19",
-                        "1 33591U 09005A   19329.93340236 +.00000035 +00000-0 +44439-4 0  9995",
-                        "2 33591 099.1905 325.0193 0013113 291.0057 068.9711 14.12384801556260")
+    if len(sys.argv) > 1:
+        
+        satellites = sys.argv[1:]
+        
+    else:
+        print("No satellite provided. Deafulting to NOAA 15")
+        satellites = ["NOAA 15"]
+
+    for sat in satellites:
+
+        az_el = directory.get_current_azimuth_and_elevation(sat, home)
+
+        print(az_el)
 
 
-
-    az_el = directory.get_current_azimuth_and_elevation("NOAA 19", home)
-
-    print(az_el)
-
-
-    print("NEXT PASS")
-    next_pass = directory.get_next_pass("NOAA 18", home)
-    if next_pass['success']:
-        if 'finish' in next_pass:
-            print("Start: %s Finish: %s" % (next_pass['start'], next_pass['finish']))
-        else:
-            print("Start: %s Finish: AFTER 24 HOURS" % next_pass['start'])
+        print("NEXT PASS")
+        next_pass = directory.get_next_pass(sat, home)
+        if next_pass['success']:
+            if 'finish' in next_pass:
+                print("Start: %s Finish: %s" % (next_pass['start'], next_pass['finish']))
+            else:
+                print("Start: %s Finish: AFTER 24 HOURS" % next_pass['start'])

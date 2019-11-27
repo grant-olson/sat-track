@@ -1,12 +1,13 @@
-from satellite_directory import Home, SatelliteDirectory
+from satellite_directory import Home, todays_directory
 from antenna_robot import AntennaRobot
 from time import sleep
+import sys
 
 class Tracker:
     def __init__(self, robot, home):
         self.robot = robot
         self.home = home
-        self.directory = SatelliteDirectory()
+        self.directory = todays_directory()
 
     def decimal_angle(self,degrees,minutes,seconds):
         return float(degrees) + (float(minutes) / 60) + (float(seconds) / 3600)
@@ -63,19 +64,8 @@ class Tracker:
 
 if __name__ == "__main__":
     home = Home("EN90xj")
-    robot = AntennaRobot(17,18, elevation_max=2350)
+    robot = AntennaRobot(4,22, elevation_max=2350, elevation_min=600)
     tracker = Tracker(robot, home)
 
-    tracker.directory.add_keplerian("NOAA 18",
-                    "1 28654U 05018A   19329.58873065  .00000093  00000-0  75226-4 0  9993",
-                    "2 28654  99.0757  18.7938 0015197  88.8661 271.4251 14.12469460748097")
-
-    tracker.directory.add_keplerian("NOAA 15",
-                        "1 25338U 98030A   19329.89389862 +.00000035 +00000-0 +33163-4 0  9996",
-                        "2 25338 098.7361 350.7909 0011200 133.9459 226.2647 14.25940760119826")
-
-    tracker.directory.add_keplerian("NOAA 19",
-                        "1 33591U 09005A   19329.93340236 +.00000035 +00000-0 +44439-4 0  9995",
-                        "2 33591 099.1905 325.0193 0013113 291.0057 068.9711 14.12384801556260")
-
-    tracker.track("NOAA 19")
+    
+    tracker.track(sys.argv[1])
