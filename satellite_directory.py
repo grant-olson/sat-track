@@ -68,7 +68,9 @@ def todays_directory():
     directory = SatelliteDirectory()
 
     urls = {"Amateur": "https://celestrak.com/NORAD/elements/amateur.txt",
-            "NOAA Weather": "https://celestrak.com/NORAD/elements/noaa.txt"}
+            "NOAA Weather": "https://celestrak.com/NORAD/elements/noaa.txt",
+            "GOES Weather": "https://www.celestrak.com/NORAD/elements/goes.txt"
+    }
 
     for name, url in urls.items():
         print("Loading %s..." % name)
