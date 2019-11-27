@@ -99,7 +99,7 @@ if __name__ == "__main__":
         print(az_el)
 
 
-        print("NEXT PASS")
+        print("NEXT PASS for %s" % sat)
         next_pass = directory.get_next_pass(sat, home)
         if next_pass['success']:
             if 'finish' in next_pass:
