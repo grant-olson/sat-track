@@ -63,6 +63,41 @@ class SatelliteDirectory:
         results["success"] = found_pass
         return results
 
+    def list_next_passes(self, home, satellites):
+        results = []
+        
+        for sat in satellites:
+
+            next_pass = self.get_next_pass(sat, home)
+            if next_pass['success']:
+                if 'finish' in next_pass:
+                    results.append((sat, next_pass['start'], next_pass['finish']))
+                else:
+                    results.append((sat, next_pass['start'], None))
+                results.sort(key=lambda tup: tup[1])
+
+        print("Current Time: %s\n" % datetime.now(utc))
+
+        biggest_name = 0
+        for result in results:
+            name, start, finish = result
+            name_length = len(name)
+            if name_length > biggest_name:
+                biggest_name = name_length
+        
+        for result in results:
+            name, start, finish = result
+
+            start = start.strftime("%H:%M")
+
+            if finish is None:
+                finish = "Unknown"
+            else:
+                finish = finish.strftime("%H:%M")
+            
+    
+            format_string = "Satellite: %" + str(biggest_name) +"s Start: %s Finish: %s"
+            print( format_string % (name, start, finish))
 
 def todays_directory():
     directory = SatelliteDirectory()
@@ -78,6 +113,8 @@ def todays_directory():
 
     return directory
 
+    
+
 if __name__ == "__main__":
     
     home = Home("EN90xj")
@@ -90,42 +127,6 @@ if __name__ == "__main__":
         
     else:
         print("No satellite provided. Deafulting to NOAA 15")
-        satellites = ["NOAA 15"]
+        satellites = ["NOAA 15 [B]"]
 
-    results = []
-        
-    for sat in satellites:
-
-        az_el = directory.get_current_azimuth_and_elevation(sat, home)
-
-        next_pass = directory.get_next_pass(sat, home)
-        if next_pass['success']:
-            if 'finish' in next_pass:
-                results.append((sat, next_pass['start'], next_pass['finish']))
-            else:
-                results.append((sat, next_pass['start'], None))
-
-results.sort(key=lambda tup: tup[1])
-
-print("Current Time: %s\n" % datetime.now(utc))
-
-biggest_name = 0
-for result in results:
-    name, start, finish = result
-    name_length = len(name)
-    if name_length > biggest_name:
-        biggest_name = name_length
-        
-for result in results:
-    name, start, finish = result
-
-    start = start.strftime("%m-%d %H:%M")
-
-    if finish is None:
-        finish = "Unknown"
-    else:
-        finish = finish.strftime("%H:%M")
-            
-    
-    format_string = "Satellite: %" + str(biggest_name) +"s Start: %s Finish: %s"
-    print( format_string % (name, start, finish))
+    directory.list_next_passes(home, satellites)
