@@ -84,8 +84,6 @@ if __name__ == "__main__":
 
     directory = todays_directory()
 
-    print(repr(directory.satellites.keys()))
-
     if len(sys.argv) > 1:
         
         satellites = sys.argv[1:]
@@ -94,17 +92,40 @@ if __name__ == "__main__":
         print("No satellite provided. Deafulting to NOAA 15")
         satellites = ["NOAA 15"]
 
+    results = []
+        
     for sat in satellites:
 
         az_el = directory.get_current_azimuth_and_elevation(sat, home)
 
-        print(az_el)
-
-
-        print("NEXT PASS for %s" % sat)
         next_pass = directory.get_next_pass(sat, home)
         if next_pass['success']:
             if 'finish' in next_pass:
-                print("Start: %s Finish: %s" % (next_pass['start'], next_pass['finish']))
+                results.append((sat, next_pass['start'], next_pass['finish']))
             else:
-                print("Start: %s Finish: AFTER 24 HOURS" % next_pass['start'])
+                results.append((sat, next_pass['start'], None))
+
+results.sort(key=lambda tup: tup[1])
+
+print("Current Time: %s\n" % datetime.now(utc))
+
+biggest_name = 0
+for result in results:
+    name, start, finish = result
+    name_length = len(name)
+    if name_length > biggest_name:
+        biggest_name = name_length
+        
+for result in results:
+    name, start, finish = result
+
+    start = start.strftime("%m-%d %H:%M")
+
+    if finish is None:
+        finish = "Unknown"
+    else:
+        finish = finish.strftime("%H:%M")
+            
+    
+    format_string = "Satellite: %" + str(biggest_name) +"s Start: %s Finish: %s"
+    print( format_string % (name, start, finish))
