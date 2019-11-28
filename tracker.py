@@ -14,11 +14,13 @@ class Tracker:
 
     def track(self, satellite):
 
-        next_pass = self.directory.get_next_pass(satellite, self.home)
-        if not next_pass['success']:
+        next_passes = self.directory.get_next_passes(satellite, self.home)
+        if len(next_passes) < 1:
             print("No passes in next 24 hours. Won't Track.")
             return
 
+        next_pass = next_passes[0]
+        
         print("Next Pass starts at %s." % next_pass['start'])
         if 'finish' in next_pass:
             pass_time = next_pass['finish'] - next_pass['start']
@@ -64,7 +66,7 @@ class Tracker:
 
 if __name__ == "__main__":
     home = Home("EN90xj")
-    robot = AntennaRobot(4,22, elevation_max=2350, elevation_min=600)
+    robot = AntennaRobot(4,22, elevation_max=2350, elevation_min=550)
     tracker = Tracker(robot, home)
 
     
