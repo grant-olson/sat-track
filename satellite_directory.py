@@ -35,69 +35,83 @@ class SatelliteDirectory:
     def get_current_azimuth_and_elevation(self, name, home):
         return self.get_azimuth_and_elevation(name, home, ts.now())
 
-    def get_next_pass(self, name, home):
+    def get_next_passes(self, name, home, window=24*60):
         """
-        Get next pass with a limit of 24 hours
+        Get next passes with a default limit of 24 hours
         """
         now = datetime.now(utc)
         found_pass = False
 
-        results = {}
-        
-        for i in range(0,60*24):
+        results = []
+        next_pass = {}
+    
+        for i in range(0,window):
             next_time = now + timedelta(0,60*i) # add appropriate number of seconds
             next_timescale = ts.utc(next_time)
             el, az, distance = self.get_azimuth_and_elevation(name, home, next_timescale)
 
             d, m, s = el.dms()
             
-            if found_pass:
+            if "start" in next_pass:
                 if d < 0:
-                    results["finish"] = next_time
-                    break
+                    next_pass["finish"] = next_time
+                    next_pass["finish_azimuth"] = az.dms()[0]
+                    results.append(next_pass)
+                    next_pass = {}
+                else:
+                    if d > next_pass["max_elevation"]:
+                        next_pass["max_elevation"] = d
             else:
                 if d >= 0:
-                    results["start"] = next_time
-                    found_pass = True
+                    next_pass["name"] = name
+                    next_pass["start"] = next_time
+                    next_pass["start_azimuth"] = az.dms()[0]
+                    next_pass["max_elevation"] = d
 
-        results["success"] = found_pass
+        if "start" in next_pass: # Pass that didn't finish
+            next_pass["finish_azimuth"] = az.dms()[0]
+            results.append(next_pass)
         return results
 
     def list_next_passes(self, home, satellites):
         results = []
         
         for sat in satellites:
-
-            next_pass = self.get_next_pass(sat, home)
-            if next_pass['success']:
-                if 'finish' in next_pass:
-                    results.append((sat, next_pass['start'], next_pass['finish']))
-                else:
-                    results.append((sat, next_pass['start'], None))
-                results.sort(key=lambda tup: tup[1])
+            next_passes = self.get_next_passes(sat, home)
+            if len(next_passes) > 0:
+                results.extend(next_passes)
+                
+        results.sort(key=lambda d: d['start'])
 
         print("Current Time: %s\n" % datetime.now(utc))
 
-        biggest_name = 0
+        print("")
+
+        print("+----------------------+-------+--------+--------+----------+----------+")
+        print("|       Satellite      | Start | Finish | Max El | Start Az | Finish Az|")
+        print("+----------------------+-------+--------+--------+----------+----------+")
         for result in results:
-            name, start, finish = result
-            name_length = len(name)
-            if name_length > biggest_name:
-                biggest_name = name_length
-        
-        for result in results:
-            name, start, finish = result
+            name = result['name']
+            start = result['start']
+            start_az = result['start_azimuth']
+            max_el = result['max_elevation']
+            finish_az = result['finish_azimuth']
+            if 'finish' in result:
+               finish = result['finish']
+            else:
+                finish = None
+                
 
             start = start.strftime("%H:%M")
 
             if finish is None:
-                finish = "Unknown"
+                finish = "?????"
             else:
                 finish = finish.strftime("%H:%M")
             
     
-            format_string = "Satellite: %" + str(biggest_name) +"s Start: %s Finish: %s"
-            print( format_string % (name, start, finish))
+            print( "| %20s | %s |  %s |    %3d |      %3d |       %3d|" % (name, start, finish, max_el, start_az, finish_az))
+        print("+----------------------+-------+--------+--------+----------+----------+")
 
 def todays_directory():
     directory = SatelliteDirectory()
