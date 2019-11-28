@@ -20,6 +20,9 @@ class Servo:
         ms += self.min
         self.pi.set_servo_pulsewidth(self.pin, ms)
 
+    def set_pulsewidth(self, ms):
+        self.pi.set_servo_pulsewidth(self.pin, ms)
+        
 servo1 = Servo(17)
 servo2 = Servo(18, max=2350)
 
