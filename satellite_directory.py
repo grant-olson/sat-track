@@ -87,20 +87,24 @@ class SatelliteDirectory:
 
         print("")
 
-        print("+----------------------+-------+--------+--------+----------+----------+")
-        print("|       Satellite      | Start | Finish | Max El | Start Az | Finish Az|")
-        print("+----------------------+-------+--------+--------+----------+----------+")
+        print("+----------------------+-------+--------+-----+--------+----------+----------+")
+        print("|       Satellite      | Start | Finish | Len | Max El | Start Az | Finish Az|")
+        print("+----------------------+-------+--------+-----+--------+----------+----------+")
         for result in results:
             name = result['name']
             start = result['start']
             start_az = result['start_azimuth']
             max_el = result['max_elevation']
             finish_az = result['finish_azimuth']
+
             if 'finish' in result:
                finish = result['finish']
+               length = (finish - start).seconds / 60
+            
+               
             else:
                 finish = None
-                
+                length = -1
 
             start = start.strftime("%H:%M")
 
@@ -108,10 +112,12 @@ class SatelliteDirectory:
                 finish = "?????"
             else:
                 finish = finish.strftime("%H:%M")
-            
+
     
-            print( "| %20s | %s |  %s |    %3d |      %3d |       %3d|" % (name, start, finish, max_el, start_az, finish_az))
-        print("+----------------------+-------+--------+--------+----------+----------+")
+            print( "| %20s | %s |  %s | %3d |    %3d |      %3d |       %3d|" % (name, start, finish, length, max_el, start_az, finish_az))
+        print("+----------------------+-------+--------+-----+--------+----------+----------+")
+
+
 
 def todays_directory():
     directory = SatelliteDirectory()
