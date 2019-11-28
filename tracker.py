@@ -66,7 +66,7 @@ class Tracker:
 
 if __name__ == "__main__":
     home = Home("EN90xj")
-    robot = AntennaRobot(4,22, elevation_max=2350, elevation_min=550)
+    robot = AntennaRobot(4,22, elevation_max=2350, elevation_min=610)
     tracker = Tracker(robot, home)
 
     
