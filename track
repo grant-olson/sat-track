@@ -2,8 +2,8 @@
 
 from sat_track import *
 
-home = Home("EN90xj")
-robot = AntennaRobot(4,22, elevation_max=2350, elevation_min=610)
+home = config.get_home()
+robot = config.get_robot()
 tracker = Tracker(robot, home)
 
     

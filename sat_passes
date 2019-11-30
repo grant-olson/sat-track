@@ -3,7 +3,7 @@
 from sat_track import *
 import sys
 
-home = Home("EN90xj")
+home = config.get_home()
 
 directory = todays_directory()
 

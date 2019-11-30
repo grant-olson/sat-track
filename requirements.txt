@@ -2,3 +2,4 @@ pigpio
 skyfield
 maidenhead
 numpy
+pyyaml

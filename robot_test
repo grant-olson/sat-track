@@ -2,7 +2,7 @@
 
 from sat_track import *
 
-robot = AntennaRobot(17,18, elevation_max=2350)
+robot = config.get_robot()
 robot.update(0,0)
 
 print("Rotate Azimuth 0 elevation")
