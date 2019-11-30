@@ -63,6 +63,6 @@ def get_home():
 
 def get_robot():
     load_config()
-    return AntennaRobot(current_config.azimuth_pin, current_config.elevation_pin,
-                            azimuth_min=current_config.azimuth_min, azimuth_max=current_config.azimuth_max,
-                            elevation_min=current_config.elevation_min, elevation_max=current_config.elevation_max)
+    return AntennaRobot(current_config.azimuth_pin(), current_config.elevation_pin(),
+                            azimuth_min=current_config.azimuth_min(), azimuth_max=current_config.azimuth_max(),
+                            elevation_min=current_config.elevation_min(), elevation_max=current_config.elevation_max())
