@@ -1,4 +1,4 @@
-from servo import Servo
+from .servo import Servo
 from time import sleep
 
 class AntennaRobot:
@@ -34,22 +34,3 @@ class AntennaRobot:
             self.dir = current_dir
             sleep(1)
 
-if __name__ == "__main__":
-    robot = AntennaRobot(17,18, elevation_max=2350)
-    robot.update(0,0)
-
-    print("Rotate Azimuth 0 elevation")
-    for i in range(0,360):
-        robot.update(i,0)
-        sleep(0.05)
-        
-    print("Rotate Azimuth 30 elevation")
-    for i in range(0,360):
-        robot.update(i,30)
-        sleep(0.05)
-        
-    print("Rotate Azimuth Reverse 80 elevation")
-    for i in range(0,360):
-        robot.update(360-i,80)
-        sleep(0.05)
-        

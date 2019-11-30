@@ -135,18 +135,3 @@ def todays_directory():
 
     
 
-if __name__ == "__main__":
-    
-    home = Home("EN90xj")
-
-    directory = todays_directory()
-
-    if len(sys.argv) > 1:
-        
-        satellites = sys.argv[1:]
-        
-    else:
-        print("No satellite provided. Deafulting to NOAA 15")
-        satellites = ["NOAA 15 [B]"]
-
-    directory.list_next_passes(home, satellites)

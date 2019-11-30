@@ -1,5 +1,5 @@
-from satellite_directory import Home, todays_directory
-from antenna_robot import AntennaRobot
+from .satellite_directory import Home, todays_directory
+from .antenna_robot import AntennaRobot
 from time import sleep
 import sys
 
@@ -64,10 +64,3 @@ class Tracker:
                     started_pass = True
         
 
-if __name__ == "__main__":
-    home = Home("EN90xj")
-    robot = AntennaRobot(4,22, elevation_max=2350, elevation_min=610)
-    tracker = Tracker(robot, home)
-
-    
-    tracker.track(sys.argv[1])
