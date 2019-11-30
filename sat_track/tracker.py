@@ -35,7 +35,7 @@ class Tracker:
         last_el = 0
     
         while True:
-            el, az, distance = self.directory.get_current_azimuth_and_elevation(satellite, home)
+            el, az, distance = self.directory.get_current_azimuth_and_elevation(satellite, self.home)
             az_d, az_m, az_s = az.dms()
             decimal_az = self.decimal_angle(az_d, az_m, az_s)
 
@@ -47,7 +47,7 @@ class Tracker:
     
             if decimal_el < 0:
                 print("BELOW HORIZON %f %f" % (decimal_az, decimal_el))
-                robot.update(decimal_az, 0.0)
+                self.robot.update(decimal_az, 0.0)
                 if started_pass:
                     print("FINISHED TRACKING")
                     return
@@ -55,7 +55,7 @@ class Tracker:
                     sleep(30)
 
             else:
-                robot.update(decimal_az, decimal_el)
+                self.robot.update(decimal_az, decimal_el)
                 if (last_az != az_d) or (last_el != el_d):
                     print("TRACKING %0.2f %0.2f" % (decimal_az, decimal_el))
                     last_az = az_d
