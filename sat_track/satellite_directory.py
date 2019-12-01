@@ -124,7 +124,8 @@ def todays_directory():
 
     urls = {"Amateur": "https://celestrak.com/NORAD/elements/amateur.txt",
             "NOAA Weather": "https://celestrak.com/NORAD/elements/noaa.txt",
-            "GOES Weather": "https://www.celestrak.com/NORAD/elements/goes.txt"
+            "GOES Weather": "https://www.celestrak.com/NORAD/elements/goes.txt",
+            "Iridium NEXT": "https://celestrak.com/NORAD/elements/iridium-NEXT.txt"
     }
 
     for name, url in urls.items():
