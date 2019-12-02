@@ -1,0 +1,52 @@
+#!/usr/bin/env python
+
+from sat_track import *
+
+import sys
+
+subcmd = sys.argv[1]
+subcmd_args = sys.argv[2:]
+
+print(subcmd)
+print(subcmd_args)
+
+if subcmd == "list":
+    home = config.get_home()
+    directory = todays_directory()
+    directory.list_next_passes(home, subcmd_args)
+elif subcmd == "track":
+    home = config.get_home()
+    robot = config.get_robot()
+    tracker = Tracker(robot, home)
+    tracker.track(subcmd_args[1])
+elif subcmd == "rest":
+    r = AntennaRobot(4,22)
+    r.update(90,90)
+elif subcmd == "test_robot":
+    robot = config.get_robot()
+    robot.update(0,0)
+
+    print("Rotate Azimuth 0 elevation")
+    for i in range(0,360):
+        robot.update(i,0)
+        sleep(0.05)
+        
+    print("Rotate Azimuth 30 elevation")
+    for i in range(0,360):
+        robot.update(i,30)
+        sleep(0.05)
+        
+    print("Rotate Azimuth Reverse 80 elevation")
+    for i in range(0,360):
+        robot.update(360-i,80)
+        sleep(0.05)
+elif subcmd == "calibrate":
+    cmd, az, el = subcmd_args
+
+    az_servo = Servo(config.azimuth_pin)
+    el_servo = Servo(config.elevation_pin)
+
+    az_servo.set_pulsewidth(az)
+    el_servo.set_pulsewidth(el)
+else:
+    print("HELP")
