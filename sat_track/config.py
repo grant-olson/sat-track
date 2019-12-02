@@ -66,3 +66,13 @@ def get_robot():
     return AntennaRobot(current_config.azimuth_pin(), current_config.elevation_pin(),
                             azimuth_min=current_config.azimuth_min(), azimuth_max=current_config.azimuth_max(),
                             elevation_min=current_config.elevation_min(), elevation_max=current_config.elevation_max())
+
+def get_azimuth_pin():
+    load_config()
+    return current_config.azimuth_pin()
+
+def get_elevation_pin():
+    load_config()
+    return current_config.elevation_pin()
+
+

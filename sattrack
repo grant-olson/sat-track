@@ -2,6 +2,7 @@
 
 from sat_track import *
 
+from time import sleep
 import sys
 
 subcmd = sys.argv[1]
@@ -18,7 +19,7 @@ elif subcmd == "track":
     home = config.get_home()
     robot = config.get_robot()
     tracker = Tracker(robot, home)
-    tracker.track(subcmd_args[1])
+    tracker.track(subcmd_args[0])
 elif subcmd == "rest":
     r = AntennaRobot(4,22)
     r.update(90,90)
@@ -41,10 +42,10 @@ elif subcmd == "test_robot":
         robot.update(360-i,80)
         sleep(0.05)
 elif subcmd == "calibrate":
-    cmd, az, el = subcmd_args
+    az, el = subcmd_args
 
-    az_servo = Servo(config.azimuth_pin)
-    el_servo = Servo(config.elevation_pin)
+    az_servo = Servo(config.get_azimuth_pin())
+    el_servo = Servo(config.get_elevation_pin())
 
     az_servo.set_pulsewidth(az)
     el_servo.set_pulsewidth(el)
