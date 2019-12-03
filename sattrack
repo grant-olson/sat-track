@@ -14,6 +14,8 @@ print(subcmd_args)
 if subcmd == "list":
     home = config.get_home()
     directory = todays_directory()
+    if len(subcmd_args) < 1:
+        subcmd_args = config.get_favorite_satellites()
     directory.list_next_passes(home, subcmd_args)
 elif subcmd == "track":
     home = config.get_home()
