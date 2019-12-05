@@ -16,7 +16,7 @@ class Config:
                     "GOES Weather": "https://www.celestrak.com/NORAD/elements/goes.txt",
                     "Iridium NEXT": "https://celestrak.com/NORAD/elements/iridium-NEXT.txt"
                     },
-                "favorites": ["NOAA 15 [B]" "NOAA 18 [B]" "NOAA 19 [+]" "FOX-1D (AO-92)" "FOX-1B" "SAUDISAT 1C (SO-50)"]
+                "favorites": ["NOAA 15 [B]", "NOAA 18 [B]", "NOAA 19 [+]", "FOX-1D (AO-92)", "FOX-1B", "SAUDISAT 1C (SO-50)"]
                     }
                 }
         
