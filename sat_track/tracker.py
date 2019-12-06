@@ -1,5 +1,6 @@
 from .satellite_directory import Home, todays_directory
 from .antenna_robot import AntennaRobot
+from .display import CursesDisplay
 from time import sleep
 import sys
 
@@ -8,7 +9,14 @@ class Tracker:
         self.robot = robot
         self.home = home
         self.directory = todays_directory()
+        self.display = CursesDisplay()
+#        self.display.set_header(3, "Pass Start")
+        for header, row in {"Pass Start": 3, "Pass Finish": 4, "Current Tracking": 6}.items():
+            self.display.set_header(row, header)
 
+    def __del__(self):
+        self.display = None
+            
     def decimal_angle(self,degrees,minutes,seconds):
         return float(degrees) + (float(minutes) / 60) + (float(seconds) / 3600)
 
@@ -21,14 +29,12 @@ class Tracker:
 
         next_pass = next_passes[0]
         
-        print("Next Pass starts at %s." % next_pass['start'])
+        self.display.update_status("Pass Start", "Next Pass starts at %s." % next_pass['start'])
         if 'finish' in next_pass:
             pass_time = next_pass['finish'] - next_pass['start']
             pass_minutes = pass_time.seconds / 60
             pass_seconds = pass_time.seconds % 60
-            print("Pass length %d m %d s" % (pass_minutes, pass_seconds))
-            
-        print("===")
+            self.display.update_status("Pass Finish", "Pass length %d m %d s" % (pass_minutes, pass_seconds))
             
         started_pass = False
         last_az = 0
@@ -57,7 +63,7 @@ class Tracker:
             else:
                 self.robot.update(decimal_az, decimal_el)
                 if (last_az != az_d) or (last_el != el_d):
-                    print("TRACKING %0.2f %0.2f" % (decimal_az, decimal_el))
+                    self.display.update_status("Current Tracking","TRACKING %0.2f %0.2f" % (decimal_az, decimal_el))
                     last_az = az_d
                     last_el = el_d
                     sleep(0.05)
