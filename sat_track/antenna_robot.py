@@ -8,9 +8,10 @@ class AntennaRobot:
         self.azimuth_servo = Servo(azimuth_pin, azimuth_min, azimuth_max)
         self.elevation_servo = Servo(elevation_pin, elevation_min, elevation_max)
         self.dir = "forward"
-        self.update(0,0)
         self.elevation_offset = 0.0
         self.azimuth_offset = 0.0
+
+        self.update(0,0)
         sleep(0.5)
 
     def update(self, azimuth, elevation):
