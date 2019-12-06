@@ -45,13 +45,13 @@ class Tracker:
             if ch != -1:
                 ch = chr(ch)
                 if ch == 'w':
-                    print("UP")
+                    self.robot.elevation_offset += 1
                 elif ch == 's':
-                    print("DOWN")
+                    self.robot.elevation_offset -= 1
                 elif ch == "a":
-                    print("CCW")
+                    self.robot.azimuth_offset -= 1
                 elif ch == 'd':
-                    print("CW")
+                    self.robot.azimuth_offset += 1
 
             el, az, distance = self.directory.get_current_azimuth_and_elevation(satellite, self.home)
             az_d, az_m, az_s = az.dms()
