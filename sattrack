@@ -8,8 +8,7 @@ import sys
 subcmd = sys.argv[1]
 subcmd_args = sys.argv[2:]
 
-print(subcmd)
-print(subcmd_args)
+#display = CursesDisplay()
 
 if subcmd == "list":
     home = config.get_home()
