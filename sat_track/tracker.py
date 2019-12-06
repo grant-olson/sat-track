@@ -41,6 +41,18 @@ class Tracker:
         last_el = 0
     
         while True:
+            ch = self.display.window.getch()
+            if ch != -1:
+                ch = chr(ch)
+                if ch == 'w':
+                    print("UP")
+                elif ch == 's':
+                    print("DOWN")
+                elif ch == "a":
+                    print("CCW")
+                elif ch == 'd':
+                    print("CW")
+
             el, az, distance = self.directory.get_current_azimuth_and_elevation(satellite, self.home)
             az_d, az_m, az_s = az.dms()
             decimal_az = self.decimal_angle(az_d, az_m, az_s)

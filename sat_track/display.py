@@ -4,7 +4,9 @@ class CursesDisplay:
     def __init__(self):
         self.screen = curses.initscr()
         self.window = curses.newwin(25,80)
-
+        self.window.nodelay(1)
+        curses.noecho()
+        
         self.row_headers = {"STATUS": 1}
 
         self.writeline(0, "           SAT TRACK")
