@@ -64,7 +64,7 @@ class Tracker:
             decimal_el = self.decimal_angle(el_d, el_m, el_s)
     
             if decimal_el < 0:
-                print("BELOW HORIZON %f %f" % (decimal_az, decimal_el))
+                self.display.update_status("Current Tracking", ("BELOW HORIZON %f %f %d %d" % (decimal_az, decimal_el, self.robot.azimuth_offset, self.robot.elevation_offset)))
                 self.robot.update(decimal_az, 0.0)
                 if started_pass:
                     print("FINISHED TRACKING")
@@ -75,7 +75,7 @@ class Tracker:
             else:
                 self.robot.update(decimal_az, decimal_el)
                 if (last_az != az_d) or (last_el != el_d):
-                    self.display.update_status("Current Tracking","TRACKING %0.2f %0.2f" % (decimal_az, decimal_el))
+                    self.display.update_status("Current Tracking","TRACKING %0.2f %0.2f %d %d" % (decimal_az, decimal_el, self.robot.azimuth_offset, self.robot.elevation_offset))
                     last_az = az_d
                     last_el = el_d
                     sleep(0.05)
